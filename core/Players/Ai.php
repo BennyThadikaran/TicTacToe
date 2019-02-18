@@ -64,7 +64,10 @@ class Ai implements PlayerInterface {
                   }
               }
           }
-          return $best;
+
+          // Given 2 moves with score 10,
+          // chose the shortest path
+          return $best - $moves;
       } else {
           $best = 1000;
           for ($i=0; $i < 3; $i++) {
@@ -76,7 +79,8 @@ class Ai implements PlayerInterface {
                   }
               }
           }
-          return $best;
+
+          return $best + $moves;
       }
   }
 
