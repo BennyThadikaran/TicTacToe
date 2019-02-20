@@ -11,26 +11,24 @@ class Board extends GameException {
       ];
   }
 
-  public function drawGrid():string
-  {
-      // Mark for rows and columns to enchance user experience
-      $output = "\n       1 2 3\n";
-      $i = 1;
-
-      foreach ($this->grid as $line) {
-          $output .= "     $i " . implode($line, '|') . "\n";
-          $i++;
-      }
-      return $output;
-  }
-
   public function getGrid():array
   {
       return $this->grid;
   }
 
-  public function update(string $sign, int $x, int $y):int
+  public function update($sign, $input):int
   {
+      if (! ctype_digit($input) || strlen($input) !== 2) {
+          throw new GameException('Position must be 2 digits. Try again.');
+      }
+
+      list($x, $y) = str_split($input);
+
+      // Grid index starts at 1 to make it easier for non programmers
+      // convert it to zero index.
+      $x -= 1;
+      $y -= 1;
+
       if (! isset($this->grid[$x][$y])) {
           throw new GameException('Not a valid cell. Try again.');
       }

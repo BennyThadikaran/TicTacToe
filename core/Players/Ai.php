@@ -10,8 +10,9 @@ class Ai implements PlayerInterface {
   {
       $this->board = $board;
       $this->opponent = $this->sign === 'o' ? 'x' : 'o';
-      $coord = $this->getBestMove();
-      return $this->board->update($this->sign, $coord[0], $coord[1]);
+      $input = $this->getBestMove();
+
+      return $this->board->update($this->sign, $input);
   }
 
   public function isHuman():bool
@@ -19,7 +20,7 @@ class Ai implements PlayerInterface {
       return false;
   }
 
-  private function getBestMove():array
+  private function getBestMove():string
   {
       $bestMove = [];
       $bestValue = -1000;
@@ -35,14 +36,15 @@ class Ai implements PlayerInterface {
                   $grid[$i][$j] = '_';
 
                   if ($value > $bestValue) {
-                      $bestMove[0] = $i;
-                      $bestMove[1] = $j;
+                      // Grid index starts at 1.
+                      // We add 1 for consistentcy with human players
+                      $bestMove = [$i+1, $j+1];
                       $bestValue = $value;
                   }
               }
           }
       }
-      return $bestMove;
+      return $bestMove[0] . $bestMove[1];
   }
 
   private function miniMax(array $grid, int $moves, bool $isMax):int

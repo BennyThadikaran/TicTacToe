@@ -2,16 +2,26 @@
 class TicTacToe {
 
   private $board;
+  private $ui;
   private $lastPlayer;
   private $player1;
   private $player2;
 
-  public function __construct(Board $board, PlayerInterface $player1, PlayerInterface $player2)
+  public function __construct(
+      Board $board,
+      GameUi $ui,
+      PlayerInterface $player1,
+      PlayerInterface $player2
+  )
   {
       $this->board = $board;
+      $this->ui = $ui;
 
       $player1->sign = 'x';
       $player2->sign = 'o';
+      $player1->color = 'yellow';
+      $player2->color = 'blue';
+
       $this->player1 = $player1;
       $this->player2 = $player2;
   }
@@ -19,53 +29,35 @@ class TicTacToe {
   public function start()
   {
       $gameState = -1;
-      echo $this->board->drawGrid();
+      $this->ui->drawGrid($this->board->getGrid());
 
       while ($gameState === -1) {
           $player = $this->getPlayer();
-          $color = $player->sign === 'o' ? 'blue' : 'yellow';
-          $this->print("\n{$player->name} ({$player->sign}) is playing his turn.", $color);
 
-          if ($player->isHuman()) {
-              print("Enter position: ");
-          }
+          $this->ui->notifyPlayerTurn(
+              $player->name,
+              $player->sign,
+              $player->color,
+              $player->isHuman()
+          );
 
           try {
               $gameState = $player->makeMove($this->board);
               $this->lastPlayer = $player;
           } catch (\GameException $e) {
-              $this->print($e, 'red');
+              $this->ui->printException($e);
           }
 
-          print( $this->board->drawGrid() );
+          $this->ui->drawGrid($this->board->getGrid());
       }
 
       if ($gameState === 0) {
-          $string = "--------------------------\n-     "
-              . "Game was a draw    -\n--------------------------";
-
-          $this->print($string, 'green');
+          $this->ui->printGameResult('Game was a draw');
       }
 
       if ($gameState === 1) {
-          $string = "--------------------------\n-     "
-            . "{$this->lastPlayer->name} wins the game!!     "
-            . "-\n--------------------------";
-
-          $this->print($string, 'green');
+          $this->ui->printGameResult("{$this->lastPlayer->name} wins the game!!");
       }
-  }
-
-  private function print(string $string, string $color)
-  {
-      $colors = [
-        'red'     => '31',
-        'yellow'  => '33',
-        'green'   => '32',
-        'blue'    => '36'
-      ];
-
-      print("\033[1;{$colors[$color]}m{$string}\033[0m\n");
   }
 
   private function getPlayer():PlayerInterface

@@ -1,5 +1,6 @@
 <?php
 require 'core/GameException.php';
+require 'core/GameUi.php';
 require 'core/Board.php';
 require 'core/TicTacToe.php';
 require 'core/Players/PlayerInterface.php';
@@ -65,6 +66,7 @@ fgets(STDIN);
 
 // initialize the game
 $board = new Board();
-$game = new TicTacToe($board, $player1, $player2);
+$ui = new GameUi();
+$game = new TicTacToe($board, $ui, $player1, $player2);
 
 $game->start();
