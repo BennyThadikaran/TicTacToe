@@ -3,6 +3,7 @@ class Player extends GameException implements PlayerInterface {
 
   public $name;
   public $sign;
+  public $color;
   private $board;
 
   public function __construct(string $name)
