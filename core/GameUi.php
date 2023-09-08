@@ -9,7 +9,7 @@ class GameUi
       $i = 1;
 
       foreach ($grid as $line) {
-          $output .= "     $i " . implode($line, '|') . "\n";
+          $output .= "     $i " . implode( '|', $line) . "\n";
           $i++;
       }
       print($output);

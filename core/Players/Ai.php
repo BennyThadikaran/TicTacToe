@@ -3,6 +3,7 @@ class Ai implements PlayerInterface {
 
   public $name = 'SkyNet';
   public $sign;
+  public $color;
   private $opponent;
   private $board;
 
